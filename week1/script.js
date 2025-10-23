@@ -1,20 +1,20 @@
-/* ========= DATA (Ваши результаты) ========= */
+/* ======== DATA (English labels + your exact numbers) ======== */
 const factors = [
-  "Поддержка топ-менеджмента",
-  "Четкие бизнес-цели",
-  "Качество и интеграция данных",
-  "Организационная культура",
-  "IT инфраструктура и масштабируемость",
-  "Взаимодействие между департаментами",
-  "Выбор поставщика и совместимость",
-  "Нормативные требования и compliance",
-  "Процесс управления изменениями",
-  "Обучение работников",
-  "Готовность организации",
-  "Стратегическая согласованность"
+  "Top Management Support",
+  "Clear Business Objectives",
+  "Data Quality & Integration",
+  "Organizational Culture",
+  "IT Infrastructure & Scalability",
+  "Cross-Department Collaboration",
+  "Vendor Selection & Compatibility",
+  "Regulatory & Compliance",
+  "Change Management Process",
+  "Employee Training & Competency",
+  "Organizational Readiness",
+  "Strategic Alignment"
 ];
 
-// ---- Direct matrix X (12x12) ----
+// Direct relation matrix X (12×12)
 const X = [
  [0,3.5,2,3,2.625,2,2.25,1.625,2,2.75,3.125,3],
  [3,0,2.375,2.5,2.25,2.75,2.375,1.875,2.375,2.625,2.5,3],
@@ -30,7 +30,7 @@ const X = [
  [3.25,3,2.25,2.125,2.375,2,1.625,1.625,2.5,2.5,2.875,0]
 ];
 
-// ---- Normalized matrix N (12x12) ----
+// Normalized matrix N (12×12)
 const N = [
  [0.000,0.112,0.074,0.102,0.084,0.074,0.079,0.065,0.088,0.079,0.121,0.121],
  [0.127,0.000,0.086,0.090,0.068,0.095,0.059,0.072,0.095,0.095,0.104,0.109],
@@ -46,7 +46,7 @@ const N = [
  [0.115,0.115,0.077,0.096,0.077,0.096,0.058,0.067,0.091,0.082,0.125,0.000]
 ];
 
-// ---- Total matrix T (12x12) ----
+// Total relation matrix T (12×12)
 const T = [
  [0.208,0.318,0.273,0.304,0.271,0.264,0.249,0.236,0.288,0.272,0.323,0.320],
  [0.328,0.204,0.280,0.291,0.255,0.280,0.229,0.240,0.292,0.284,0.306,0.306],
@@ -62,24 +62,32 @@ const T = [
  [0.317,0.317,0.271,0.295,0.261,0.281,0.226,0.233,0.287,0.271,0.324,0.199]
 ];
 
-// ---- Metrics (from your results) ----
+// DEMATEL indices: [Factor, D, R, D+R, D−R]
 const metrics = [
-  ["Поддержка топ-менеджмента", 3.324, 3.565, 6.890, -0.241],
-  ["Четкие бизнес-цели",         3.295, 3.586, 6.881, -0.291],
-  ["Качество и интеграция данных",3.304, 3.368, 6.672, -0.063],
-  ["Организационная культура",   3.287, 3.443, 6.729, -0.156],
-  ["IT инфраструктура и масштабируемость",3.291,3.163,6.454, 0.128],
-  ["Взаимодействие между департаментами",3.292,3.152,6.444, 0.140],
-  ["Выбор поставщика и совместимость",3.285,2.837,6.122, 0.448],
-  ["Нормативные требования и compliance",3.291,2.825,6.116, 0.465],
-  ["Процесс управления изменениями",3.299,3.418,6.717,-0.119],
-  ["Обучение работников",        3.286, 3.565, 6.851, -0.279],
-  ["Готовность организации",     3.280, 3.494, 6.774, -0.215],
-  ["Стратегическая согласованность",3.283,3.439,6.722,-0.156],
+  ["Top Management Support", 3.324, 3.565, 6.890, -0.241],
+  ["Clear Business Objectives", 3.295, 3.586, 6.881, -0.291],
+  ["Data Quality & Integration", 3.304, 3.368, 6.672, -0.063],
+  ["Organizational Culture", 3.287, 3.443, 6.729, -0.156],
+  ["IT Infrastructure & Scalability", 3.291, 3.163, 6.454, 0.128],
+  ["Cross-Department Collaboration", 3.292, 3.152, 6.444, 0.140],
+  ["Vendor Selection & Compatibility", 3.285, 2.837, 6.122, 0.448],
+  ["Regulatory & Compliance", 3.291, 2.825, 6.116, 0.465],
+  ["Change Management Process", 3.299, 3.418, 6.717, -0.119],
+  ["Employee Training & Competency", 3.286, 3.565, 6.851, -0.279],
+  ["Organizational Readiness", 3.280, 3.494, 6.774, -0.215],
+  ["Strategic Alignment", 3.283, 3.439, 6.722, -0.156]
 ];
 
-/* ========= HELPERS ========= */
-function heatmap(container, matrix, title){
+/* ======== PLOTTING HELPERS ======== */
+const heatmapLayout = (title) => ({
+  margin:{l:170,r:10,t:10,b:150},
+  xaxis:{tickangle:45, automargin:true},
+  yaxis:{automargin:true},
+  paper_bgcolor:'rgba(0,0,0,0)',
+  plot_bgcolor:'rgba(0,0,0,0)',
+});
+
+function heatmap(containerId, matrix){
   const data = [{
     z: matrix,
     x: factors,
@@ -87,23 +95,18 @@ function heatmap(container, matrix, title){
     type: 'heatmap',
     hoverongaps: false,
     zsmooth: 'best',
-    colorbar:{title:'Влияние'}
+    colorscale: 'Viridis',
+    colorbar:{title:'Influence'}
   }];
-  const layout = {
-    margin:{l:140,r:10,t:20,b:140},
-    xaxis:{tickangle:45, automargin:true},
-    yaxis:{automargin:true},
-    paper_bgcolor:'rgba(0,0,0,0)',
-    plot_bgcolor:'rgba(0,0,0,0)'
-  };
-  Plotly.newPlot(container, data, layout, {displayModeBar:false, responsive:true});
+  Plotly.newPlot(containerId, data, heatmapLayout(), {displayModeBar:false, responsive:true});
 }
 
-function influenceScatter(container){
+function causalScatter(containerId){
   const labels = metrics.map(m=>m[0]);
   const prominence = metrics.map(m=>m[2]);
   const net = metrics.map(m=>m[3]);
   const sizes = net.map(v=> 18 + Math.abs(v)*60);
+  const colors = net.map(v=> v>=0 ? '#1f8a53' : '#a22e3a'); // drivers vs outcomes
 
   const data = [{
     x: net,
@@ -111,34 +114,35 @@ function influenceScatter(container){
     mode:'markers+text',
     text: labels,
     textposition:'top center',
-    marker:{size: sizes, line:{width:1, color:'#ffffff'}},
-    hovertemplate:
-      "<b>%{text}</b><br>D+R: %{y:.3f}<br>D−R: %{x:.3f}<extra></extra>"
+    marker:{size:sizes, color:colors, line:{width:1, color:'#e8eef6'}},
+    hovertemplate:"<b>%{text}</b><br>D+R (prominence): %{y:.3f}<br>D−R (net): %{x:.3f}<extra></extra>"
   }];
 
   const layout = {
-    margin:{l:60,r:20,t:10,b:60},
-    xaxis:{zeroline:true, zerolinewidth:2, zerolinecolor:'#888', title:'D − R (причина ↔ следствие)'},
-    yaxis:{title:'D + R (значимость)'},
+    margin:{l:70,r:20,t:10,b:70},
+    xaxis:{zeroline:true, zerolinewidth:2, zerolinecolor:'#8a94a0', title:'D − R (driver ↔ outcome)'},
+    yaxis:{title:'D + R (prominence)'},
     shapes:[
-      {type:'line', x0:0,x1:0,y0:Math.min(...prominence)-0.1,y1:Math.max(...prominence)+0.1, line:{dash:'dot',width:1,color:'#888'}}
+      {type:'line', x0:0,x1:0,y0:Math.min(...prominence)-0.1,y1:Math.max(...prominence)+0.1,
+       line:{dash:'dot',width:1,color:'#8a94a0'}}
     ],
     paper_bgcolor:'rgba(0,0,0,0)',
     plot_bgcolor:'rgba(0,0,0,0)'
   };
-  Plotly.newPlot(container, data, layout, {displayModeBar:false, responsive:true});
+  Plotly.newPlot(containerId, data, layout, {displayModeBar:false, responsive:true});
 }
 
-function renderTable(container){
-  const headers = ["Фактор","D (влияние отдано)","R (влияние получено)","D+R (значимость)","D−R (чистый эффект)","Роль"];
+function renderTable(containerId){
+  const headers = ["Factor","D (given)","R (received)","D+R (prominence)","D−R (net)","Role"];
   const rows = metrics.map(m=>{
-    const role = m[3]>0 ? "Причина (Driver)" : (m[3]<0 ? "Следствие (Outcome)" : "Нейтральная");
+    const role = m[3] > 0 ? "Driver" : (m[3] < 0 ? "Outcome" : "Neutral");
     return [...m, role];
   });
+
   const table = document.createElement('table');
   const thead = document.createElement('thead');
   const hrow = document.createElement('tr');
-  headers.forEach(h=>{ const th=document.createElement('th'); th.textContent=h; hrow.appendChild(th);});
+  headers.forEach(h=>{const th=document.createElement('th'); th.textContent=h; hrow.appendChild(th);});
   thead.appendChild(hrow);
   const tbody = document.createElement('tbody');
   rows.forEach(r=>{
@@ -151,11 +155,11 @@ function renderTable(container){
     tbody.appendChild(tr);
   });
   table.appendChild(thead); table.appendChild(tbody);
-  document.getElementById(container).appendChild(table);
+  document.getElementById(containerId).appendChild(table);
 
-  // CSV download
+  // CSV export
   document.getElementById('download_csv').addEventListener('click', ()=>{
-    const csv = [headers.join(','), ...rows.map(r=>[r[0],r[1],r[2],r[3],r[4], (r[3]>0?'Driver':'Outcome')].join(','))].join('\n');
+    const csv = [headers.join(','), ...rows.map(r=>[r[0],r[1],r[2],r[3],r[4],r[5]].join(','))].join('\n');
     const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -164,19 +168,19 @@ function renderTable(container){
   });
 }
 
-/* ========= RENDER ========= */
+/* ======== RENDER ======== */
 window.addEventListener('DOMContentLoaded', ()=>{
-  heatmap('heatmap_direct', X, 'Direct');
-  heatmap('heatmap_norm', N, 'Normalized');
-  heatmap('heatmap_total', T, 'Total');
-  influenceScatter('scatter_causal');
+  heatmap('heatmap_direct', X);
+  heatmap('heatmap_norm', N);
+  heatmap('heatmap_total', T);
+  causalScatter('scatter_causal');
   renderTable('table_metrics');
 
-  // PNG download buttons
+  // PNG download for each plot
   document.querySelectorAll('.btn[data-target]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const id = btn.getAttribute('data-target');
-      Plotly.toImage(id, {format:'png', height:700, width:1000}).then(url=>{
+      Plotly.toImage(id, {format:'png', height:760, width:1140}).then(url=>{
         const a = document.createElement('a');
         a.href = url; a.download = id + '.png'; a.click();
       });
