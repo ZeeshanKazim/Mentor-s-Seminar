@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>DEMATEL — Визуализация CSF для BI (Россия)</title>
+  <link rel="stylesheet" href="style.css"/>
+  <!-- Plotly (no build step) -->
+  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header class="wrap">
+    <h1>DEMATEL — Критические факторы успеха BI (Россия)</h1>
+    <p class="subtitle">Матрицы (прямая / нормированная / полная) и карта влияний (D+R, D−R)</p>
+  </header>
+
+  <main class="wrap grid">
+    <section class="card">
+      <h2>Рис. 1 — Прямая матрица влияний (X)</h2>
+      <div id="heatmap_direct" class="plot"></div>
+      <button class="btn" data-target="heatmap_direct">Скачать PNG</button>
+      <p class="caption">Сырые экспертные оценки 12×12 (0–4). Ячейки темнее ⇒ более сильное влияние.</p>
+    </section>
+
+    <section class="card">
+      <h2>Рис. 2 — Нормированная матрица (N)</h2>
+      <div id="heatmap_norm" class="plot"></div>
+      <button class="btn" data-target="heatmap_norm">Скачать PNG</button>
+      <p class="caption">Нормировка по сумме строк, подготовка к полным влияниям.</p>
+    </section>
+
+    <section class="card">
+      <h2>Рис. 3 — Полная матрица влияний (T)</h2>
+      <div id="heatmap_total" class="plot"></div>
+      <button class="btn" data-target="heatmap_total">Скачать PNG</button>
+      <p class="caption">Прямые + косвенные влияния. Темнее ⇒ более сильные пути воздействия.</p>
+    </section>
+
+    <section class="card full">
+      <h2>Рис. 4 — Карта причин–следствий (D+R vs D−R)</h2>
+      <div id="scatter_causal" class="plot"></div>
+      <div class="legend">
+        <span class="pill cause">Причины (D−R &gt; 0)</span>
+        <span class="pill effect">Следствия (D−R &lt; 0)</span>
+      </div>
+      <button class="btn" data-target="scatter_causal">Скачать PNG</button>
+      <p class="caption">
+        Вертикаль = значимость (D+R), горизонталь = чистый эффект (D−R). Право: причины; лево: следствия. Размер круга ∝ |D−R|.
+      </p>
+    </section>
+
+    <section class="card full">
+      <h2>Таблица — D, R, D+R, D−R</h2>
+      <div id="table_metrics" class="tablewrap"></div>
+      <button id="download_csv" class="btn">Скачать CSV</button>
+    </section>
+  </main>
+
+  <footer class="wrap foot">
+    <small>© Zeeshan Kazim · DEMATEL визуализация для «Основные организационные факторы, влияющие на успешное внедрение BI в РФ»</small>
+  </footer>
+</body>
+</html>
