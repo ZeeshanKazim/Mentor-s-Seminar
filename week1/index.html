@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>DEMATEL — Визуализация CSF для BI (Россия)</title>
+  <title>DEMATEL — CSFs for BI Implementation (Russia)</title>
   <link rel="stylesheet" href="style.css"/>
   <!-- Plotly (no build step) -->
   <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
@@ -11,54 +11,63 @@
 </head>
 <body>
   <header class="wrap">
-    <h1>DEMATEL — Критические факторы успеха BI (Россия)</h1>
-    <p class="subtitle">Матрицы (прямая / нормированная / полная) и карта влияний (D+R, D−R)</p>
+    <h1>DEMATEL — Critical Success Factors for BI Implementation (Russia)</h1>
+    <p class="subtitle">Direct • Normalized • Total relation matrices and the causal map (D+R vs D−R)</p>
   </header>
 
   <main class="wrap grid">
     <section class="card">
-      <h2>Рис. 1 — Прямая матрица влияний (X)</h2>
+      <h2>Fig. 1 — Direct Relation Matrix (X)</h2>
       <div id="heatmap_direct" class="plot"></div>
-      <button class="btn" data-target="heatmap_direct">Скачать PNG</button>
-      <p class="caption">Сырые экспертные оценки 12×12 (0–4). Ячейки темнее ⇒ более сильное влияние.</p>
-    </section>
-
-    <section class="card">
-      <h2>Рис. 2 — Нормированная матрица (N)</h2>
-      <div id="heatmap_norm" class="plot"></div>
-      <button class="btn" data-target="heatmap_norm">Скачать PNG</button>
-      <p class="caption">Нормировка по сумме строк, подготовка к полным влияниям.</p>
-    </section>
-
-    <section class="card">
-      <h2>Рис. 3 — Полная матрица влияний (T)</h2>
-      <div id="heatmap_total" class="plot"></div>
-      <button class="btn" data-target="heatmap_total">Скачать PNG</button>
-      <p class="caption">Прямые + косвенные влияния. Темнее ⇒ более сильные пути воздействия.</p>
-    </section>
-
-    <section class="card full">
-      <h2>Рис. 4 — Карта причин–следствий (D+R vs D−R)</h2>
-      <div id="scatter_causal" class="plot"></div>
-      <div class="legend">
-        <span class="pill cause">Причины (D−R &gt; 0)</span>
-        <span class="pill effect">Следствия (D−R &lt; 0)</span>
+      <div class="row">
+        <button class="btn" data-target="heatmap_direct">Download PNG</button>
+        <span class="hint">Raw expert scores (0–4). Darker ⇒ stronger influence.</span>
       </div>
-      <button class="btn" data-target="scatter_causal">Скачать PNG</button>
-      <p class="caption">
-        Вертикаль = значимость (D+R), горизонталь = чистый эффект (D−R). Право: причины; лево: следствия. Размер круга ∝ |D−R|.
-      </p>
+    </section>
+
+    <section class="card">
+      <h2>Fig. 2 — Normalized Matrix (N)</h2>
+      <div id="heatmap_norm" class="plot"></div>
+      <div class="row">
+        <button class="btn" data-target="heatmap_norm">Download PNG</button>
+        <span class="hint">Row-sum normalization prior to total effects.</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Fig. 3 — Total Relation Matrix (T)</h2>
+      <div id="heatmap_total" class="plot"></div>
+      <div class="row">
+        <button class="btn" data-target="heatmap_total">Download PNG</button>
+        <span class="hint">Direct + indirect effects. Darker ⇒ stronger pathways.</span>
+      </div>
     </section>
 
     <section class="card full">
-      <h2>Таблица — D, R, D+R, D−R</h2>
+      <h2>Fig. 4 — Causal Map (Prominence vs Net Effect)</h2>
+      <div id="scatter_causal" class="plot tall"></div>
+      <div class="legend">
+        <span class="pill cause">Drivers (D−R &gt; 0)</span>
+        <span class="pill effect">Outcomes (D−R &lt; 0)</span>
+      </div>
+      <div class="row">
+        <button class="btn" data-target="scatter_causal">Download PNG</button>
+        <span class="hint">Vertical: D+R (prominence). Horizontal: D−R (cause ↔ effect). Size ∝ |D−R|.</span>
+      </div>
+    </section>
+
+    <section class="card full">
+      <h2>Table — DEMATEL Indices</h2>
       <div id="table_metrics" class="tablewrap"></div>
-      <button id="download_csv" class="btn">Скачать CSV</button>
+      <div class="row">
+        <button id="download_csv" class="btn">Download CSV</button>
+        <span class="hint">Columns: Factor, D (given), R (received), D+R (prominence), D−R (net effect), Role.</span>
+      </div>
     </section>
   </main>
 
   <footer class="wrap foot">
-    <small>© Zeeshan Kazim · DEMATEL визуализация для «Основные организационные факторы, влияющие на успешное внедрение BI в РФ»</small>
+    <small>© Zeeshan Kazim · DEMATEL visuals for “Main Organizational Factors that Influence Successful BI Implementation in Russian Companies.”</small>
   </footer>
 </body>
 </html>
